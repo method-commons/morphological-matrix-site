@@ -1,6 +1,6 @@
 # Morphologischer Kasten – Kurzschulung
 
-Mockup einer One-Pager-Webseite, die die Methodik des Morphologischen Kastens (Zwicky-Box) erklärt.
+One-Pager-Webseite, die die Methodik des Morphologischen Kastens (Zwicky-Box) erklärt.
 
 Öffnen: `index.html` direkt im Browser (keine Build-Schritte nötig).
 
