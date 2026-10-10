@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Der Morphologische Kasten</title>
+<meta name="description" content="Eine kompakte Schulung zur Methodik des Morphologischen Kastens (Zwicky-Box): Grundidee, Vorgehen in fünf Schritten, interaktives Beispiel und Praxistipps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface-2: #efede6;
+    --text: #1d1d1b;
+    --muted: #5d5c57;
+    --line: #dcd9cf;
+    --accent: #2f5bd3;
+    --accent-soft: #e3eafc;
+    --accent-text: #ffffff;
+    --ok: #1f7a4d;
+    --ok-soft: #dff2e8;
+    --warn: #a4501a;
+    --warn-soft: #fbe9dc;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);
+    --radius: 14px;
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413;
+      --surface: #1d1d1b;
+      --surface-2: #262623;
+      --text: #ecebe6;
+      --muted: #a3a29b;
+      --line: #36352f;
+      --accent: #7c9cf5;
+      --accent-soft: #23305a;
+      --accent-text: #0f1424;
+      --ok: #6fd1a0;
+      --ok-soft: #173a29;
+      --warn: #f2a46f;
+      --warn-soft: #3d2516;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413;
+    --surface: #1d1d1b;
+    --surface-2: #262623;
+    --text: #ecebe6;
+    --muted: #a3a29b;
+    --line: #36352f;
+    --accent: #7c9cf5;
+    --accent-soft: #23305a;
+    --accent-text: #0f1424;
+    --ok: #6fd1a0;
+    --ok-soft: #173a29;
+    --warn: #f2a46f;
+    --warn-soft: #3d2516;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: Fraunces, Georgia, serif; line-height: 1.2; margin: 0 0 .5em; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -.01em; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  h3 { font-size: 1.15rem; font-family: Inter, sans-serif; font-weight: 600; }
+  p { margin: 0 0 1em; }
+  a { color: var(--accent); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 600; color: var(--accent); margin-bottom: .75em; display: block; }
+  .lead { font-size: 1.15rem; color: var(--muted); max-width: 62ch; }
+  .muted { color: var(--muted); }
+
+  /* Nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .brand { font-weight: 700; text-decoration: none; color: var(--text); display: flex; gap: 10px; align-items: center; white-space: nowrap; }
+  .brand-mark { width: 22px; height: 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .brand-mark i { background: var(--line); border-radius: 2px; }
+  .brand-mark i.on { background: var(--accent); }
+  nav.top ul { list-style: none; margin: 0 0 0 auto; padding: 0; display: flex; gap: 20px; font-size: .9rem; }
+  nav.top ul a { color: var(--muted); text-decoration: none; }
+  nav.top ul a:hover { color: var(--text); }
+  @media (max-width: 820px) { nav.top ul { display: none; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: .95rem;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: var(--accent-text); }
+  .btn-ghost { border-color: var(--line); color: var(--text); background: var(--surface); }
+  .btn:hover { filter: brightness(1.05); }
+
+  /* Hero */
+  .hero { padding: 88px 0 72px; border-top: 0; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .hero-meta { display: flex; gap: 24px; margin-top: 32px; font-size: .9rem; color: var(--muted); flex-wrap: wrap; }
+  .hero-meta b { color: var(--text); display: block; font-size: 1.2rem; }
+
+  .hero-box {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .hero-box svg { width: 100%; height: auto; display: block; }
+
+  /* Cards */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .card p:last-child { margin-bottom: 0; }
+  .icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; margin-bottom: 14px; }
+  .icon svg { width: 20px; height: 20px; }
+
+  .two-col > *, .grid-2 > *, .grid-3 > *, .demo-out > *, .hero-grid > * { min-width: 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
+
+  blockquote {
+    margin: 0; padding: 20px 24px; border-left: 3px solid var(--accent);
+    background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+    font-family: Fraunces, Georgia, serif; font-size: 1.15rem;
+  }
+  blockquote footer { font-family: Inter, sans-serif; font-size: .85rem; color: var(--muted); margin-top: 10px; }
+
+  /* Glossary */
+  dl.terms { margin: 0; display: grid; gap: 14px; }
+  dl.terms div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  dl.terms dt { font-weight: 600; }
+  dl.terms dd { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
+
+  /* Steps */
+  ol.steps { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 16px; counter-reset: step; }
+  ol.steps li {
+    counter-increment: step; display: grid; grid-template-columns: 56px 1fr; gap: 20px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px;
+  }
+  ol.steps li::before {
+    content: counter(step); font-family: Fraunces, Georgia, serif; font-size: 1.6rem; font-weight: 700;
+    width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center;
+  }
+  ol.steps h3 { margin-bottom: .3em; }
+  ol.steps p { margin: 0; color: var(--muted); }
+  ol.steps .tip { margin-top: 10px; font-size: .9rem; color: var(--text); }
+  ol.steps .tip b { color: var(--accent); }
+  @media (max-width: 560px) { ol.steps li { grid-template-columns: 1fr; gap: 10px; } }
+
+  /* Demo matrix */
+  .demo-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+  .demo-tools { display: flex; gap: 10px; flex-wrap: wrap; }
+  .matrix-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  table.matrix { border-collapse: collapse; width: 100%; min-width: 720px; font-size: .92rem; }
+  table.matrix th, table.matrix td { border-bottom: 1px solid var(--line); padding: 6px; text-align: left; }
+  table.matrix tr:last-child th, table.matrix tr:last-child td { border-bottom: 0; }
+  table.matrix th { width: 170px; padding: 14px 16px; background: var(--surface-2); font-weight: 600; vertical-align: middle; }
+  table.matrix th small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; }
+  table.matrix button {
+    width: 100%; min-height: 48px; padding: 8px 12px; border-radius: 9px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--text);
+    font: inherit; cursor: pointer; text-align: left; transition: background .15s, border-color .15s;
+  }
+  table.matrix button:hover { border-color: var(--accent); }
+  table.matrix button[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+  table.matrix button.conflict { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+
+  .demo-out { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; margin-top: 20px; }
+  @media (max-width: 860px) { .demo-out { grid-template-columns: 1fr; } }
+  .concept-line { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+  .chip { padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: .85rem; font-weight: 500; }
+  .chip.empty { background: var(--surface-2); color: var(--muted); }
+  .status { padding: 10px 14px; border-radius: 10px; font-size: .9rem; }
+  .status.ok { background: var(--ok-soft); color: var(--ok); }
+  .status.warn { background: var(--warn-soft); color: var(--warn); }
+  .status.info { background: var(--surface-2); color: var(--muted); }
+  .big-num { font-family: Fraunces, Georgia, serif; font-size: 2.6rem; font-weight: 700; line-height: 1; }
+  .formula { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem; color: var(--muted); margin-top: 8px; }
+
+  /* Do / Don't */
+  .dd h3 { display: flex; align-items: center; gap: 8px; }
+  .dd ul { margin: 0; padding-left: 1.2em; }
+  .dd li { margin-bottom: .5em; }
+  .dd.do h3 { color: var(--ok); }
+  .dd.dont h3 { color: var(--warn); }
+
+  /* Evaluation table */
+  table.eval { width: 100%; border-collapse: collapse; font-size: .92rem; background: var(--surface); border-radius: var(--radius); overflow: hidden; }
+  table.eval th, table.eval td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; }
+  table.eval thead th { background: var(--surface-2); font-weight: 600; }
+  table.eval td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.eval tr.best td { background: var(--ok-soft); font-weight: 600; }
+  .eval-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+
+  /* Quiz */
+  .quiz { display: grid; gap: 16px; }
+  .q { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; }
+  .q p { font-weight: 600; }
+  .q .opts { display: grid; gap: 8px; }
+  .q button {
+    text-align: left; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); font: inherit; cursor: pointer;
+  }
+  .q button:hover:not(:disabled) { border-color: var(--accent); }
+  .q button.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .q button.wrong { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+  .q .why { margin-top: 12px; font-size: .9rem; color: var(--muted); display: none; }
+  .q.done .why { display: block; }
+
+  /* CTA */
+  .cta { background: var(--accent); color: var(--accent-text); border-radius: 20px; padding: 48px 40px; display: grid; grid-template-columns: 1.4fr auto; gap: 24px; align-items: center; }
+  .cta p { opacity: .9; margin: 0; }
+  .cta .btn { background: var(--accent-text); color: var(--accent); }
+  @media (max-width: 760px) { .cta { grid-template-columns: 1fr; padding: 32px 24px; } }
+
+  footer.site { padding: 40px 0 56px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+  footer.site .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  .mock-badge { position: fixed; right: 16px; bottom: 16px; background: var(--text); color: var(--bg); font-size: .75rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; letter-spacing: .04em; z-index: 20; }
+  .theme-toggle { margin-left: 8px; background: none; border: 1px solid var(--line); color: var(--text); border-radius: 999px; width: 34px; height: 34px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+  @media (max-width: 820px) { .theme-toggle { margin-left: auto; } }
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Hauptnavigation">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i></span>
+      Morphologischer Kasten
+    </a>
+    <ul>
+      <li><a href="#grundidee">Grundidee</a></li>
+      <li><a href="#vorgehen">Vorgehen</a></li>
+      <li><a href="#beispiel">Beispiel</a></li>
+      <li><a href="#bewertung">Bewertung</a></li>
+      <li><a href="#praxis">Praxistipps</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">◐</button>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Kurzschulung · Kreativ- &amp; Problemlösungsmethoden</span>
+        <h1>Der Morphologische Kasten</h1>
+        <p class="lead">Ein Problem in seine Bestandteile zerlegen, für jeden Bestandteil Lösungsvarianten sammeln – und daraus systematisch neue Gesamtlösungen kombinieren. In 15 Minuten verstehst du, wie die Methode funktioniert und wann sie sich lohnt.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#vorgehen">Schulung starten ↓</a>
+          <a class="btn btn-ghost" href="https://schwaen.github.io/morphological-matrix-app/" target="_blank" rel="noopener">Zur Matrix-App ↗</a>
+        </div>
+        <div class="hero-meta">
+          <div><b>5</b>Schritte</div>
+          <div><b>~15 min</b>Lesezeit</div>
+          <div><b>1</b>interaktives Beispiel</div>
+        </div>
+      </div>
+      <div class="hero-box" aria-hidden="true">
+        <svg viewBox="0 0 420 260" role="img">
+          <style>
+            .h-lbl { font: 600 11px Inter, sans-serif; fill: var(--text); }
+            .h-cell { fill: var(--bg); stroke: var(--line); }
+            .h-on { fill: var(--accent); }
+            .h-path { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+          </style>
+          <g class="h-lbl">
+            <text x="0" y="36">Parameter A</text>
+            <text x="0" y="96">Parameter B</text>
+            <text x="0" y="156">Parameter C</text>
+            <text x="0" y="216">Parameter D</text>
+          </g>
+          <g>
+            <rect class="h-cell" x="90" y="16" width="70" height="34" rx="7"/><rect class="h-cell" x="170" y="16" width="70" height="34" rx="7"/><rect class="h-on" x="250" y="16" width="70" height="34" rx="7"/><rect class="h-cell" x="330" y="16" width="70" height="34" rx="7"/>
+            <rect class="h-on" x="90" y="76" width="70" height="34" rx="7"/><rect class="h-cell" x="170" y="76" width="70" height="34" rx="7"/><rect class="h-cell" x="250" y="76" width="70" height="34" rx="7"/>
+            <rect class="h-cell" x="90" y="136" width="70" height="34" rx="7"/><rect class="h-cell" x="170" y="136" width="70" height="34" rx="7"/><rect class="h-on" x="250" y="136" width="70" height="34" rx="7"/><rect class="h-cell" x="330" y="136" width="70" height="34" rx="7"/>
+            <rect class="h-cell" x="90" y="196" width="70" height="34" rx="7"/><rect class="h-on" x="170" y="196" width="70" height="34" rx="7"/><rect class="h-cell" x="250" y="196" width="70" height="34" rx="7"/>
+          </g>
+          <polyline class="h-path" points="285,33 125,93 285,153 205,213"/>
+          <g fill="var(--accent)"><circle cx="285" cy="33" r="5"/><circle cx="125" cy="93" r="5"/><circle cx="285" cy="153" r="5"/><circle cx="205" cy="213" r="5"/></g>
+          <text x="210" y="254" text-anchor="middle" style="font: 500 11px Inter, sans-serif; fill: var(--muted)">Eine Linie durch die Matrix = ein Lösungskonzept</text>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- GRUNDIDEE -->
+  <section id="grundidee">
+    <div class="wrap">
+      <span class="eyebrow">01 · Grundidee</span>
+      <div class="two-col">
+        <div>
+          <h2>Komplexe Probleme in kombinierbare Teile zerlegen</h2>
+          <p>Der Morphologische Kasten (auch <em>morphologische Matrix</em> oder <em>Zwicky-Box</em>) wurde in den 1940er-Jahren vom Schweizer Astrophysiker <strong>Fritz Zwicky</strong> entwickelt. Statt nach der einen genialen Idee zu suchen, beschreibt man ein Problem über seine wesentlichen <strong>Parameter</strong> und sammelt für jeden Parameter mögliche <strong>Ausprägungen</strong>.</p>
+          <p>Jede Kombination aus genau einer Ausprägung pro Parameter ergibt ein mögliches Gesamtkonzept. So wird der <strong>Lösungsraum</strong> sichtbar – inklusive Varianten, an die man spontan nie gedacht hätte.</p>
+          <blockquote>
+            „Die Morphologie ist die Lehre von der Gesamtheit aller möglichen Lösungen eines gegebenen Problems.“
+            <footer>— sinngemäß nach Fritz Zwicky</footer>
+          </blockquote>
+        </div>
+        <div>
+          <h3 style="margin-bottom:14px">Die wichtigsten Begriffe</h3>
+          <dl class="terms">
+            <div><dt>Parameter (Merkmal, Dimension)</dt><dd>Eine Eigenschaft oder Teilfunktion, die jede Lösung haben muss – z.&nbsp;B. „Antrieb“, „Material“, „Vertriebskanal“. Bildet eine Zeile der Matrix.</dd></div>
+            <div><dt>Ausprägung (Option, Variante)</dt><dd>Eine konkrete Möglichkeit, den Parameter zu erfüllen – z.&nbsp;B. „elektrisch“, „Muskelkraft“, „Wasserstoff“.</dd></div>
+            <div><dt>Konfiguration (Lösungskonzept)</dt><dd>Eine Auswahl von genau einer Ausprägung je Parameter – visualisiert als Linie durch die Matrix.</dd></div>
+            <div><dt>Lösungsraum</dt><dd>Die Menge aller theoretisch möglichen Konfigurationen = Produkt der Anzahl der Ausprägungen.</dd></div>
+            <div><dt>Konsistenzprüfung (Cross-Consistency)</dt><dd>Das Aussortieren von Kombinationen, deren Ausprägungen sich gegenseitig ausschließen.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WANN -->
+  <section id="wann">
+    <div class="wrap">
+      <span class="eyebrow">02 · Einsatzgebiete</span>
+      <h2>Wann lohnt sich die Methode?</h2>
+      <p class="lead">Immer dann, wenn ein Problem aus mehreren, weitgehend unabhängigen Teilaspekten besteht und du nicht nur <em>eine</em>, sondern die <em>beste</em> Lösung aus vielen finden willst.</p>
+      <div class="grid-3" style="margin-top:28px">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+          <h3>Produktentwicklung</h3>
+          <p class="muted">Neue Produkt- oder Konstruktionsvarianten finden, Funktionen mit Lösungsprinzipien verknüpfen (klassisch in der Konstruktionsmethodik nach VDI&nbsp;2221).</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+          <h3>Geschäftsmodelle &amp; Services</h3>
+          <p class="muted">Zielgruppe, Erlösmodell, Kanal und Leistungsversprechen kombinieren, um neue Angebote oder Szenarien zu skizzieren.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>Strategie &amp; Szenarien</h3>
+          <p class="muted">Zukunftsszenarien aus Einflussfaktoren und deren möglichen Entwicklungen ableiten, Prozesse oder Organisationsformen variieren.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:20px">
+        <div class="card dd do">
+          <h3>✓ Gut geeignet, wenn …</h3>
+          <ul>
+            <li>sich das Problem in 3–8 klare Teilaspekte zerlegen lässt,</li>
+            <li>es für jeden Teilaspekt mehrere echte Alternativen gibt,</li>
+            <li>du blinde Flecken vermeiden und Optionen nachvollziehbar dokumentieren willst,</li>
+            <li>ein Team gemeinsam einen Lösungsraum aufspannen soll.</li>
+          </ul>
+        </div>
+        <div class="card dd dont">
+          <h3>✕ Weniger geeignet, wenn …</h3>
+          <ul>
+            <li>das Problem noch unklar ist (erst Problemdefinition schärfen),</li>
+            <li>die Teilaspekte stark voneinander abhängen,</li>
+            <li>es nur eine offensichtliche Lösung gibt,</li>
+            <li>du eine schnelle Ja/Nein-Entscheidung brauchst.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VORGEHEN -->
+  <section id="vorgehen">
+    <div class="wrap">
+      <span class="eyebrow">03 · Vorgehen</span>
+      <h2>In fünf Schritten zum Lösungskonzept</h2>
+      <p class="lead">Die Methode ist simpel – die Qualität entsteht in der Sorgfalt der ersten beiden Schritte.</p>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3>Problem präzise formulieren</h3>
+            <p>Was genau soll gelöst werden? Formuliere die Fragestellung lösungsneutral, also ohne schon eine Lösung vorwegzunehmen.</p>
+            <p class="tip"><b>Tipp:</b> „Wie können wir Getränke unterwegs abfallfrei ausgeben?“ statt „Wir brauchen einen Pfandbecher“.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Parameter bestimmen</h3>
+            <p>Welche Merkmale bzw. Teilfunktionen hat jede denkbare Lösung? Die Parameter sollten möglichst <strong>unabhängig</strong> voneinander und zusammen <strong>vollständig</strong> sein.</p>
+            <p class="tip"><b>Faustregel:</b> 4–7 Parameter. Weniger ist oft zu grob, mehr wird unübersichtlich.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Ausprägungen sammeln</h3>
+            <p>Für jeden Parameter werden möglichst viele, verschiedene Ausprägungen gesucht – gerne per Brainstorming, Recherche oder Analogien aus anderen Branchen.</p>
+            <p class="tip"><b>Tipp:</b> Bewusst auch ungewöhnliche Optionen aufnehmen. Bewertet wird erst später.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Kombinationen bilden</h3>
+            <p>Wähle pro Zeile genau eine Ausprägung und verbinde sie zu einem Konzept. Erstelle mehrere Konzepte nach unterschiedlichen Leitideen – z.&nbsp;B. „günstigste“, „nachhaltigste“, „radikalste“ Variante.</p>
+            <p class="tip"><b>Tipp:</b> Unverträgliche Kombinationen (Konsistenzprüfung) frühzeitig markieren und ausschließen.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Bewerten &amp; auswählen</h3>
+            <p>Die vielversprechendsten Konzepte werden anhand von Kriterien (z.&nbsp;B. Kosten, Machbarkeit, Kundennutzen) verglichen – etwa mit einer gewichteten Nutzwertanalyse.</p>
+            <p class="tip"><b>Ergebnis:</b> 1–3 Konzepte, die weiter ausgearbeitet oder prototypisch getestet werden.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- BEISPIEL -->
+  <section id="beispiel">
+    <div class="wrap">
+      <span class="eyebrow">04 · Interaktives Beispiel</span>
+      <div class="demo-head">
+        <div>
+          <h2>Probier es aus: Ein Mehrwegbecher-System</h2>
+          <p class="lead" style="margin:0">Fragestellung: <em>„Wie können Cafés Heißgetränke zum Mitnehmen ohne Einwegmüll anbieten?“</em> Klicke in jeder Zeile eine Ausprägung an, um dein eigenes Konzept zu bilden.</p>
+        </div>
+        <div class="demo-tools">
+          <button class="btn btn-ghost" id="randomBtn" type="button">🎲 Zufallskonzept</button>
+          <button class="btn btn-ghost" id="resetBtn" type="button">Zurücksetzen</button>
+        </div>
+      </div>
+
+      <div class="matrix-scroll">
+        <table class="matrix" id="matrix" aria-label="Morphologischer Kasten Mehrwegbecher"></table>
+      </div>
+
+      <div class="demo-out">
+        <div class="card">
+          <h3>Dein Lösungskonzept</h3>
+          <div class="concept-line" id="conceptLine"></div>
+          <div class="status info" id="status">Wähle in jeder Zeile eine Ausprägung.</div>
+        </div>
+        <div class="card">
+          <h3>Größe des Lösungsraums</h3>
+          <div class="big-num" id="spaceNum">–</div>
+          <div class="formula" id="spaceFormula"></div>
+          <p class="muted" style="margin-top:12px;font-size:.9rem">Schon bei fünf Parametern entstehen hunderte Kombinationen. Genau deshalb braucht es Leitideen und eine Konsistenzprüfung, um sinnvoll auszuwählen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEWERTUNG -->
+  <section id="bewertung">
+    <div class="wrap">
+      <span class="eyebrow">05 · Bewertung</span>
+      <div class="two-col">
+        <div>
+          <h2>Vom Lösungsraum zur Entscheidung</h2>
+          <p>Nicht jede Kombination ist sinnvoll. Die Auswahl erfolgt typischerweise in zwei Filtern:</p>
+          <div class="card" style="margin-bottom:14px">
+            <h3>1 · Konsistenzprüfung</h3>
+            <p class="muted">Paarweise prüfen, welche Ausprägungen sich ausschließen (z.&nbsp;B. „Bambus-Komposit“ + „Industriespülmaschine bei 85&nbsp;°C“). Unverträgliche Paare werden markiert; alle Konzepte, die sie enthalten, fallen weg.</p>
+          </div>
+          <div class="card">
+            <h3>2 · Nutzwertanalyse</h3>
+            <p class="muted">Die verbleibenden Favoriten werden gegen gewichtete Kriterien bewertet (Punkte 1–5 × Gewicht). Die Summe macht Konzepte vergleichbar – und die Entscheidung nachvollziehbar.</p>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:14px">Beispiel: drei Konzepte im Vergleich</h3>
+          <div class="eval-wrap">
+            <table class="eval">
+              <thead>
+                <tr><th>Kriterium</th><th>Gewicht</th><th>A „Pfand-Klassiker“</th><th>B „App-Abo“</th><th>C „Eigener Becher“</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Kosten für Café</td><td class="num">30&nbsp;%</td><td class="num">3</td><td class="num">2</td><td class="num">5</td></tr>
+                <tr><td>Kundenkomfort</td><td class="num">30&nbsp;%</td><td class="num">4</td><td class="num">5</td><td class="num">2</td></tr>
+                <tr><td>Umweltwirkung</td><td class="num">25&nbsp;%</td><td class="num">4</td><td class="num">4</td><td class="num">5</td></tr>
+                <tr><td>Umsetzbarkeit</td><td class="num">15&nbsp;%</td><td class="num">5</td><td class="num">2</td><td class="num">4</td></tr>
+                <tr class="best"><td>Nutzwert</td><td class="num">100&nbsp;%</td><td class="num">3,85</td><td class="num">3,40</td><td class="num">3,95</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted" style="font-size:.85rem;margin-top:10px">Werte sind fiktiv und dienen nur der Veranschaulichung.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRAXIS -->
+  <section id="praxis">
+    <div class="wrap">
+      <span class="eyebrow">06 · Praxistipps</span>
+      <h2>Typische Fehler – und wie du sie vermeidest</h2>
+      <div class="grid-2" style="margin-top:28px">
+        <div class="card">
+          <h3>Parameter überlappen sich</h3>
+          <p class="muted">„Material“ und „Nachhaltigkeit“ sind keine unabhängigen Parameter. Frage dich: Kann ich den einen ändern, ohne den anderen zu berühren?</p>
+        </div>
+        <div class="card">
+          <h3>Ausprägungen auf unterschiedlichem Abstraktionsniveau</h3>
+          <p class="muted">„Kunststoff“ neben „PP-Becher von Hersteller X“ verzerrt den Vergleich. Halte eine Zeile auf einer Detailebene.</p>
+        </div>
+        <div class="card">
+          <h3>Zu früh bewerten</h3>
+          <p class="muted">Wer beim Sammeln bereits aussortiert, verliert genau die überraschenden Optionen, für die die Methode gemacht ist.</p>
+        </div>
+        <div class="card">
+          <h3>Bewertungskriterien als Parameter</h3>
+          <p class="muted">„Kosten: niedrig / mittel / hoch“ ist kein Gestaltungsmerkmal, sondern ein Ergebnis. Kriterien gehören in die Bewertung, nicht in die Matrix.</p>
+        </div>
+        <div class="card">
+          <h3>Die Matrix explodiert</h3>
+          <p class="muted">10 Parameter × 6 Ausprägungen = über 60 Mio. Kombinationen. Lieber Parameter bündeln oder in Teilprobleme aufteilen.</p>
+        </div>
+        <div class="card">
+          <h3>Nur eine Linie ziehen</h3>
+          <p class="muted">Der Mehrwert entsteht im Vergleich: Bilde bewusst mehrere Konzepte entlang verschiedener Leitideen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz">
+    <div class="wrap">
+      <span class="eyebrow">07 · Wissenscheck</span>
+      <h2>Drei Fragen zum Abschluss</h2>
+      <p class="lead">Teste dein Verständnis. Die Erklärung erscheint nach deiner Antwort.</p>
+      <div class="quiz" id="quizBox"></div>
+      <p class="muted" id="quizScore" style="margin-top:16px"></p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="border-top:0;padding-top:24px">
+    <div class="wrap">
+      <div class="cta">
+        <div>
+          <h2 style="margin-bottom:.3em">Jetzt selbst eine Matrix bauen</h2>
+          <p>Mit der Morphological-Matrix-App legst du Parameter und Ausprägungen an, kombinierst Konzepte per Klick und exportierst dein Ergebnis.</p>
+        </div>
+        <a class="btn" href="https://schwaen.github.io/morphological-matrix-app/" target="_blank" rel="noopener">App öffnen ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Morphologischer Kasten · Kurzschulung (Mockup)</span>
+    <span>Methode nach Fritz Zwicky · Beispielwerte fiktiv</span>
+  </div>
+</footer>
+
+<div class="mock-badge">MOCKUP</div>
+
+<script>
+  // Theme toggle
+  (function () {
+    const root = document.documentElement;
+    let saved = null;
+    try { saved = localStorage.getItem('mk-theme'); } catch (e) {}
+    if (saved) root.dataset.theme = saved;
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const dark = root.dataset.theme
+        ? root.dataset.theme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'light' : 'dark';
+      try { localStorage.setItem('mk-theme', root.dataset.theme); } catch (e) {}
+    });
+  })();
+
+  // Interactive matrix
+  const params = [
+    { name: 'Material', hint: 'Woraus besteht der Becher?', opts: ['Edelstahl', 'Polypropylen', 'Glas', 'Bambus-Komposit'] },
+    { name: 'Rückgabe', hint: 'Wie kommt er zurück?', opts: ['Pfand an der Theke', 'Rückgabeautomat', 'App-Ausleihe (QR)', 'Kunde behält Becher'] },
+    { name: 'Reinigung', hint: 'Wer spült, wie?', opts: ['Café-Spülmaschine', 'Zentraler Dienstleister', 'Kunde selbst'] },
+    { name: 'Finanzierung', hint: 'Wer zahlt?', opts: ['Pfandbetrag', 'Monats-Abo', 'Rabatt pro Füllung', 'Kostenlos (Sponsor)'] },
+    { name: 'Deckel', hint: 'Wie wird verschlossen?', opts: ['Steckdeckel', 'Schraubdeckel', 'Ohne Deckel'] }
+  ];
+  // Pairs that don't fit together: [paramIdx, optIdx, paramIdx, optIdx, reason]
+  const conflicts = [
+    [0, 3, 2, 1, 'Bambus-Komposit verträgt keine Industriespülung bei hohen Temperaturen.'],
+    [1, 3, 3, 0, 'Wenn der Kunde den Becher behält, gibt es kein Pfand zurückzuerstatten.'],
+    [1, 3, 2, 1, 'Ein zentraler Spüldienst setzt voraus, dass Becher zurückkommen.'],
+    [0, 2, 1, 1, 'Glas ist für die meisten Rückgabeautomaten (Bruchgefahr) ungeeignet.']
+  ];
+
+  const sel = params.map(() => null);
+  const table = document.getElementById('matrix');
+
+  params.forEach((p, r) => {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.scope = 'row';
+    th.innerHTML = p.name + '<small>' + p.hint + '</small>';
+    tr.appendChild(th);
+    const maxCols = Math.max(...params.map(x => x.opts.length));
+    for (let c = 0; c < maxCols; c++) {
+      const td = document.createElement('td');
+      if (c < p.opts.length) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = p.opts[c];
+        b.dataset.r = r; b.dataset.c = c;
+        b.setAttribute('aria-pressed', 'false');
+        b.addEventListener('click', () => { sel[r] = sel[r] === c ? null : c; render(); });
+        td.appendChild(b);
+      }
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  });
+
+  function activeConflicts() {
+    return conflicts.filter(([r1, c1, r2, c2]) => sel[r1] === c1 && sel[r2] === c2);
+  }
+
+  function render() {
+    const hits = activeConflicts();
+    table.querySelectorAll('button').forEach(b => {
+      const r = +b.dataset.r, c = +b.dataset.c;
+      b.setAttribute('aria-pressed', sel[r] === c ? 'true' : 'false');
+      const inConflict = hits.some(([r1, c1, r2, c2]) => (r === r1 && c === c1) || (r === r2 && c === c2));
+      b.classList.toggle('conflict', inConflict);
+    });
+
+    const line = document.getElementById('conceptLine');
+    line.innerHTML = '';
+    params.forEach((p, r) => {
+      const s = document.createElement('span');
+      s.className = 'chip' + (sel[r] === null ? ' empty' : '');
+      s.textContent = sel[r] === null ? p.name + ': ?' : p.opts[sel[r]];
+      line.appendChild(s);
+    });
+
+    const st = document.getElementById('status');
+    const done = sel.every(v => v !== null);
+    if (hits.length) {
+      st.className = 'status warn';
+      st.innerHTML = '<b>Inkonsistent:</b> ' + hits.map(h => h[4]).join(' ');
+    } else if (done) {
+      st.className = 'status ok';
+      st.innerHTML = '<b>Konsistentes Konzept.</b> Gib ihm einen Namen und bewerte es gegen deine Kriterien.';
+    } else {
+      st.className = 'status info';
+      st.textContent = 'Noch ' + sel.filter(v => v === null).length + ' von ' + params.length + ' Parametern offen.';
+    }
+  }
+
+  const counts = params.map(p => p.opts.length);
+  document.getElementById('spaceNum').textContent = counts.reduce((a, b) => a * b, 1) + ' Konzepte';
+  document.getElementById('spaceFormula').textContent = counts.join(' × ') + ' = ' + counts.reduce((a, b) => a * b, 1);
+
+  document.getElementById('randomBtn').addEventListener('click', () => {
+    let tries = 0;
+    do {
+      params.forEach((p, r) => { sel[r] = Math.floor(Math.random() * p.opts.length); });
+      tries++;
+    } while (activeConflicts().length && tries < 50);
+    render();
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => { sel.fill(null); render(); });
+  render();
+
+  // Quiz
+  const quiz = [
+    { q: 'Was bildet eine Zeile im Morphologischen Kasten?',
+      a: ['Ein Bewertungskriterium', 'Ein Parameter mit seinen Ausprägungen', 'Ein fertiges Lösungskonzept'], ok: 1,
+      why: 'Jede Zeile steht für einen Parameter (Merkmal); die Zellen daneben sind dessen alternative Ausprägungen.' },
+    { q: 'Eine Matrix hat 4 Parameter mit 3, 4, 2 und 5 Ausprägungen. Wie groß ist der Lösungsraum?',
+      a: ['14', '60', '120'], ok: 2,
+      why: 'Die Anzahl der Kombinationen ist das Produkt: 3 × 4 × 2 × 5 = 120.' },
+    { q: '„Kosten: niedrig / mittel / hoch“ als Parameter – gute Idee?',
+      a: ['Ja, Kosten sind immer wichtig', 'Nein, das ist ein Bewertungskriterium, kein Gestaltungsmerkmal', 'Nur bei Produkten'], ok: 1,
+      why: 'Kosten ergeben sich aus der gewählten Lösung. Sie gehören in die Bewertung (z. B. Nutzwertanalyse), nicht in die Matrix.' }
+  ];
+  const quizBox = document.getElementById('quizBox');
+  let score = 0, answered = 0;
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = '<p>' + (i + 1) + '. ' + item.q + '</p><div class="opts"></div><div class="why">' + item.why + '</div>';
+    const opts = d.querySelector('.opts');
+    item.a.forEach((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        opts.querySelectorAll('button').forEach((x, k) => {
+          x.disabled = true;
+          if (k === item.ok) x.classList.add('right');
+        });
+        if (j !== item.ok) b.classList.add('wrong'); else score++;
+        answered++;
+        d.classList.add('done');
+        if (answered === quiz.length) {
+          document.getElementById('quizScore').textContent =
+            score + ' von ' + quiz.length + ' richtig. ' + (score === quiz.length ? 'Stark – du bist bereit für deine erste eigene Matrix!' : 'Schau dir die Abschnitte oben gern noch einmal an.');
+        }
+      });
+      opts.appendChild(b);
+    });
+    quizBox.appendChild(d);
+  });
+</script>
+</body>
+</html>
