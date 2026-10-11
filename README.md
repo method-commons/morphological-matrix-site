@@ -4,4 +4,4 @@ One-Pager-Webseite, die die Methodik des Morphologischen Kastens (Zwicky-Box) er
 
 Öffnen: `index.html` direkt im Browser (keine Build-Schritte nötig).
 
-Referenz-App: https://schwaen.github.io/morphological-matrix-app/
+Referenz-App: https://method-commons.github.io/morphological-matrix-app/
